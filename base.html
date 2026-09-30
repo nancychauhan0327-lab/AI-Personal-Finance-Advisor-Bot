@@ -1,0 +1,29 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Finance Advisor</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+:root{--bg:#f5f7fa;--card:#fff;--tx:#1d2733;--mut:#6b7785;--pri:#0f766e;--bad:#b91c1c;--ok:#15803d;--bd:#e3e8ee}
+@media(prefers-color-scheme:dark){:root{--bg:#0f1720;--card:#18222e;--tx:#e6edf3;--mut:#93a1b0;--pri:#2dd4bf;--bd:#26323f;--bad:#f87171;--ok:#4ade80}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.5 system-ui,sans-serif}
+nav{display:flex;flex-wrap:wrap;gap:4px 14px;align-items:center;padding:12px 20px;background:var(--card);border-bottom:1px solid var(--bd)}
+nav b{color:var(--pri);margin-right:auto}nav a{color:var(--tx);text-decoration:none}nav a:hover{color:var(--pri)}
+main{max-width:1000px;margin:20px auto;padding:0 16px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:16px;margin-bottom:16px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.stat small{color:var(--mut);display:block}.stat b{font-size:1.5em}
+input,select,textarea,button{font:inherit;padding:8px 10px;border:1px solid var(--bd);border-radius:6px;background:var(--bg);color:var(--tx)}
+button{background:var(--pri);color:#fff;border:0;cursor:pointer}button.link{background:none;color:var(--bad);padding:0}
+form.row{display:flex;flex-wrap:wrap;gap:8px}table{width:100%;border-collapse:collapse}td,th{padding:8px;border-bottom:1px solid var(--bd);text-align:left}
+.ok{color:var(--ok)}.err,.bad{color:var(--bad)}.flash{padding:10px;border-radius:6px;margin-bottom:12px;background:var(--card);border:1px solid var(--bd)}
+.bar{height:10px;background:var(--bd);border-radius:5px;overflow:hidden}.bar i{display:block;height:100%;background:var(--pri)}
+pre{white-space:pre-wrap;font:inherit;margin:0}.wide{overflow-x:auto}
+</style></head><body>
+{% if current_user.is_authenticated %}<nav><b>💰 Finance Advisor</b>
+<a href="{{url_for('dashboard',m=month)}}">Dashboard</a><a href="{{url_for('income',m=month)}}">Income</a>
+<a href="{{url_for('expenses',m=month)}}">Expenses</a><a href="{{url_for('budget',m=month)}}">Budget</a>
+<a href="{{url_for('savings')}}">Savings</a><a href="{{url_for('report',m=month)}}">Report</a><a href="{{url_for('profile')}}">Profile</a>
+<form method="post" action="{{url_for('logout')}}" style="margin:0"><input type="hidden" name="_csrf" value="{{csrf}}"><button class="link" style="color:var(--mut)">Logout</button></form></nav>{% endif %}
+<main>{% for c,m in get_flashed_messages(with_categories=true) %}<div class="flash {{c}}">{{m}}</div>{% endfor %}
+{% if current_user.is_authenticated and request.endpoint in ['dashboard','income','expenses','budget','report'] %}
+<form class="row" style="margin-bottom:12px"><label>Month <input type="month" name="m" value="{{month}}" onchange="this.form.submit()"></label></form>{% endif %}
+{% block body %}{% endblock %}</main></body></html>

@@ -1,0 +1,9 @@
+{% extends "base.html" %}{% block body %}
+<div class="card"><h2>Monthly report · {{month}}</h2>
+<div class="grid"><div class="stat"><small>Income</small><b>{{'%.2f'|format(d.income)}}</b></div><div class="stat"><small>Expenses</small><b>{{'%.2f'|format(d.expense)}}</b></div>
+<div class="stat"><small>Savings rate</small><b>{{d.rate}}%</b></div><div class="stat"><small>Health score</small><b>{{score}}/100</b></div></div></div>
+<div class="card"><h3>Category totals</h3><table>{% for c,v in d.by_cat.items() %}<tr><td>{{c}}<td>{{'%.2f'|format(v)}}<td class="bad">{{'Over by %.2f'|format(d.over[c]) if c in d.over}}</tr>{% endfor %}</table></div>
+<div class="card"><h3>Findings</h3><ul>{% for n in notes %}<li>{{n}}</li>{% endfor %}</ul></div>
+<div class="card"><h3>AI recommendations</h3>
+<form method="post"><input type="hidden" name="_csrf" value="{{csrf}}"><button>{{'Refresh' if rep else 'Generate'}} AI insights</button></form>
+{% if rep %}<p><small>Saved {{rep.created.strftime('%Y-%m-%d %H:%M')}}</small></p><pre>{{rep.summary}}</pre>{% endif %}</div>{% endblock %}

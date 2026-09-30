@@ -1,0 +1,18 @@
+{% extends "base.html" %}{% block body %}
+<div class="grid">
+<div class="card stat"><small>Income</small><b class="ok">{{'%.2f'|format(d.income)}}</b></div>
+<div class="card stat"><small>Expenses</small><b class="bad">{{'%.2f'|format(d.expense)}}</b></div>
+<div class="card stat"><small>Balance · savings rate</small><b>{{'%.2f'|format(d.balance)}}</b> <small>{{d.rate}}%</small></div>
+<div class="card stat"><small>Health score</small><b>{{score}}/100</b></div></div>
+<div class="grid"><div class="card"><h3>Expense breakdown</h3><canvas id="pie"></canvas></div>
+<div class="card"><h3>Budget vs actual</h3><canvas id="bar"></canvas></div></div>
+<div class="card"><h3>Savings goal</h3><p>{{'%.2f'|format(d.total_saved)}}{% if goal %} / {{'%.2f'|format(goal)}}{% endif %}</p>
+<div class="bar"><i style="width:{{ [100*d.total_saved/goal,100]|min if goal else 0 }}%"></i></div></div>
+<div class="card"><h3>Insights</h3>{% if rep %}<pre>{{rep.summary}}</pre>{% else %}<ul>{% for n in notes %}<li>{{n}}</li>{% endfor %}</ul>{% endif %}
+<p><a href="{{url_for('report',m=month)}}">Full report &rarr;</a></p></div>
+<script>
+const cats={{cats|tojson}},vals={{d.by_cat.values()|list|tojson}},alloc={{d.alloc|tojson}};
+new Chart(pie,{type:'doughnut',data:{labels:cats,datasets:[{data:vals}]}});
+const all=[...new Set([...cats,...Object.keys(alloc)])];
+new Chart(bar,{type:'bar',data:{labels:all,datasets:[{label:'Budget',data:all.map(c=>alloc[c]||0)},{label:'Spent',data:all.map(c=>({{d.by_cat|tojson}})[c]||0)}]}});
+</script>{% endblock %}

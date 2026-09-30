@@ -1,0 +1,9 @@
+{% extends "base.html" %}{% block body %}
+<div class="card" style="max-width:380px;margin:40px auto">
+{% if mode=='error' %}<h2>Error</h2><p class="err">{{err}}</p><a href="/">Back</a>{% else %}
+<h2>{{'Create account' if mode=='register' else 'Sign in'}}</h2>
+<form method="post" style="display:grid;gap:10px"><input type="hidden" name="_csrf" value="{{csrf}}">
+<input name="username" placeholder="Username" required>
+{% if mode=='register' %}<input name="email" type="email" placeholder="Email" required>{% endif %}
+<input name="password" type="password" placeholder="Password (8+ chars)" required><button>{{'Register' if mode=='register' else 'Login'}}</button></form>
+<p><small>{% if mode=='register' %}Have an account? <a href="{{url_for('login')}}">Login</a>{% else %}New here? <a href="{{url_for('register')}}">Register</a>{% endif %}</small></p>{% endif %}</div>{% endblock %}

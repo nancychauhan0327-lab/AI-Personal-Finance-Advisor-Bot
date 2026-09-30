@@ -1,0 +1,7 @@
+{% extends "base.html" %}{% block body %}
+<div class="card"><h2>Budget plan · {{month}}</h2>
+<form method="post"><input type="hidden" name="_csrf" value="{{csrf}}"><button>{{'Regenerate' if b else 'Generate'}} budget with AI</button></form>
+{% if b %}<p><small>Source: {{b.source}}</small></p><p>{{b.advice}}</p>{% else %}<p>Record income first, then generate a personalised plan.</p>{% endif %}</div>
+{% if alloc %}<div class="card wide"><table><tr><th>Category<th>Budget<th>Spent<th>Used</tr>
+{% for c,a in alloc.items() %}{% set s=d.by_cat.get(c,0) %}{% set p=(100*s/a)|round if a else 0 %}
+<tr><td>{{c}}<td>{{'%.2f'|format(a)}}<td class="{{'bad' if s>a}}">{{'%.2f'|format(s)}}<td style="min-width:140px"><div class="bar"><i style="width:{{[p,100]|min}}%;{{'background:var(--bad)' if s>a}}"></i></div>{{p}}%</tr>{% endfor %}</table></div>{% endif %}{% endblock %}
