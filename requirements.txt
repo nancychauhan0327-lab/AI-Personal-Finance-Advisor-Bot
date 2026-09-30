@@ -6,3 +6,4 @@ openai>=1.30
 google-generativeai>=0.7
 pyngrok>=7.0
 psycopg2-binary>=2.9
+gunicorn
